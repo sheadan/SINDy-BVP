@@ -1,0 +1,9 @@
+# Directories
+/data/*
+/Figs/*
+/Supporting Information/*
+/sindy_bvp/__pycache__/
+/sindy_bvp/*/__pycache__/
+
+# Specific file types to ignore (images)
+*.svg

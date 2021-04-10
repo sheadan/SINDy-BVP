@@ -267,20 +267,26 @@ class Plotter(PlotOptions):
             self.alpha_x = None
             self.is_nonlinear = False
 
-        # Now compute the learned coefficients:
-        # Pull out the parametric coefficient for 'f'
-        learned_f_coeff = self.reg_coeffs['f']
-        # Compute learned parametric coefficient \phi
-        inferred_phi = -1*np.reciprocal(learned_f_coeff)
-        # Set NaN entries to 0 (shouldn't be any NaNs though...)
-        inferred_phi[np.isnan(inferred_phi)] = 0
-        # Save the inferred phi vector
-        self.inferred_phi = inferred_phi
+        if 'f' in self.reg_coeffs:
+            # Now compute the learned coefficients:
+            # Pull out the parametric coefficient for 'f'
+            learned_f_coeff = self.reg_coeffs['f']
+            # Compute learned parametric coefficient \phi
+            inferred_phi = -1*np.reciprocal(learned_f_coeff)
+            # Set NaN entries to 0 (shouldn't be any NaNs though...)
+            inferred_phi[np.isnan(inferred_phi)] = 0
+            # Save the inferred phi vector
+            self.inferred_phi = inferred_phi
+        else:
+            # get a random entry in the coefficients matrix:
+            random_coef_vector = list(self.reg_coeffs.values())[0]
+            # Use it to create zero vector:
+            self.inferred_phi = np.zeros(random_coef_vector.shape)
 
         # If 'u' is found in the model, there is a q(x) that can be computed
         if 'u' in self.reg_coeffs:
             # Compute q(x)
-            self.inferred_q = self.reg_coeffs['u'] * inferred_phi
+            self.inferred_q = self.reg_coeffs['u'] * self.inferred_phi
         else:
             self.inferred_q = np.zeros(self.inferred_phi.shape)
 

@@ -33,8 +33,9 @@ class NoiseMaker:
         Returns:
         signal -- the signal after noise and filters were applied.
         """
+        noise = 0
         for i in range(self.measurements_to_average):
-            noise = self.noise_mag*np.std(signal)*np.random.randn(len(signal))
+            noise += self.get_noise(signal)
         noise = noise/self.measurements_to_average
         signal = signal + noise
         if self.gaussian_sigma is not None:
@@ -42,3 +43,21 @@ class NoiseMaker:
                                      sigma=self.gaussian_sigma,
                                      mode='nearest')
         return signal
+
+    def get_noise(self, signal):
+        SNR = 1/(self.noise_mag)
+        #std_z = np.std(signal)
+        noise = np.random.randn(*signal.shape)
+
+        z_norm = np.linalg.norm(signal)
+        SNR_correct_norm = np.sqrt((z_norm**2)/(10**(SNR/10)))
+
+        noise_norm = np.linalg.norm(noise)
+        noise = (SNR_correct_norm/noise_norm)*noise
+
+        return noise
+
+    def get_noise_old(self, signal):
+        noise = self.noise_mag*np.std(signal)
+        noise *= np.random.randn(len(signal))
+        return noise

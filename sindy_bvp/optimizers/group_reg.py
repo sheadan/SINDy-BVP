@@ -78,6 +78,7 @@ class GroupRegressor:
             dps = [dp[known_vars] for dp in self.datapools]
             self.reg_terms = known_vars
             self.sgtr.num_tols = 1
+
         self.reg_terms.remove(self.grouper.lhs_term)
 
         # Use the grouping algorithm to group the data for regression inputs

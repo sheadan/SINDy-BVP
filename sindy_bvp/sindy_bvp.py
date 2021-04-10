@@ -138,7 +138,7 @@ class SINDyBVP:
         for sol, f in zip(ode_sols, used_fs):
             # Prepare independent variable
             x_data = sol.t
-            x = IndependentVariable(self.iv_name, x_data, poly_deg=4)
+            x = IndependentVariable(self.iv_name, x_data, poly_deg=0)
 
             # And prepare the dependent variable
             signal = sol.y[0]
